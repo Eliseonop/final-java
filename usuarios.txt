@@ -1,0 +1,3 @@
+edu,edu,admin
+admin,admin,admin
+cliente1,cliente1,cliente
