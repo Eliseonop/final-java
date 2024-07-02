@@ -82,10 +82,24 @@ public class FuncionService {
         return new ArrayList<>(funciones);
     }
 
-    public List<Funcion> obtenerFuncionesPorPelicula(String peliculaId) {
-        return funciones.stream()
+    public void funcionesPorPeliculaIdTable(String peliculaId) {
+        List<Funcion> listaFunciones = funciones.stream()
                 .filter(funcion -> funcion.getPeliculaId().equals(peliculaId))
                 .collect(Collectors.toList());
+
+        String format = "|%1$-5s|%2$-15s|%3$-15s|%4$-20s|\n";
+        String separador = "+-----+---------------+---------------+----------------------+\n";
+        System.out.println(separador);
+        System.out.printf(format, "ID", "Pelicula", "Sala", "Fecha y Hora");
+        System.out.println(separador);
+
+        for (Funcion funcion : listaFunciones) {
+            Pelicula pelicula = peliculaService.obtenerPeliculaPorId(funcion.getPeliculaId());
+            Sala sala = salaService.obtenerSalaPorId(funcion.getSalaId());
+            System.out.printf(format, funcion.getId(), pelicula.getTitulo(), sala.getNombre(), funcion.getFechaHora());
+        }
+
+
     }
 
     public boolean actualizarFuncion(String id, String peliculaId, String salaId, LocalDateTime fechaHora) {

@@ -2,9 +2,11 @@ package ProyectoFinal.vistas.cliente;
 
 import ProyectoFinal.modelos.Pelicula;
 import ProyectoFinal.modelos.Funcion;
+import ProyectoFinal.modelos.Sala;
 import ProyectoFinal.modelos.Ticket;
 import ProyectoFinal.servicios.PeliculaService;
 import ProyectoFinal.servicios.FuncionService;
+import ProyectoFinal.servicios.SalaService;
 import ProyectoFinal.servicios.TicketService;
 
 import java.time.LocalDateTime;
@@ -15,14 +17,17 @@ public class PrincipalCliente {
     private PeliculaService peliculaService;
     private TicketService ticketService;
     private FuncionService funcionService;
+    private SalaService salaService;
     private Scanner scanner;
 
-    public PrincipalCliente(PeliculaService peliculaService, TicketService ticketService, FuncionService funcionService) {
+    public PrincipalCliente(PeliculaService peliculaService, TicketService ticketService, FuncionService funcionService, SalaService salaService) {
         this.peliculaService = peliculaService;
         this.ticketService = ticketService;
         this.funcionService = funcionService;
+        this.salaService = salaService;
         this.scanner = new Scanner(System.in);
     }
+
 
     public void iniciar() {
         while (true) {
@@ -55,42 +60,70 @@ public class PrincipalCliente {
     }
 
     private void verCartelera() {
-        List<Pelicula> peliculas = peliculaService.listarPeliculas();
-        for (Pelicula pelicula : peliculas) {
-            System.out.println(pelicula);
-        }
+        funcionService.listarFuncionesTable();
+//        for (Pelicula pelicula : peliculas) {
+//            System.out.println(pelicula);
+//        }
     }
 
 
     private void comprarEntradas() {
         System.out.println("Comprar Entradas - Seleccionar Película");
-        verCartelera();
-        System.out.print("Ingrese el título de la película: ");
-        String titulo = scanner.nextLine();
-        Pelicula pelicula = peliculaService.obtenerPelicula(titulo);
+        peliculaService.listarPeliculasTable();
+        System.out.print("Ingrese el ID de la película: ");
+        String id = scanner.nextLine();
+        Pelicula pelicula = peliculaService.obtenerPeliculaPorId(id);
         if (pelicula == null) {
             System.out.println("Película no encontrada.");
             return;
         }
 
         System.out.println("Seleccione la función:");
-        List<Funcion> funciones = funcionService.obtenerFuncionesPorPelicula(titulo);
-        for (int i = 0; i < funciones.size(); i++) {
-            System.out.println((i + 1) + ". " + funciones.get(i));
-        }
-        int indiceFuncion = scanner.nextInt();
-        scanner.nextLine();
-        if (indiceFuncion < 1 || indiceFuncion > funciones.size()) {
-            System.out.println("Función no válida.");
+        funcionService.funcionesPorPeliculaIdTable(id);
+//        for (int i = 0; i < funciones.size(); i++) {
+//            System.out.println((i + 1) + ". " + funciones.get(i));
+//        }
+
+        System.out.print("Ingrese el ID de la función: ");
+
+        String indiceFuncion = scanner.nextLine();
+//        scanner.nextLine();
+        Funcion funcion = funcionService.obtenerFuncionPorId(indiceFuncion);
+        if (funcion == null) {
+            System.out.println("Función no encontrada.");
             return;
         }
-        Funcion funcion = funciones.get(indiceFuncion - 1);
+
+        Sala sala = salaService.obtenerSalaPorId(funcion.getSalaId());
+
+        if (sala == null) {
+            System.out.println("Sala no encontrada.");
+            return;
+        }
+        funcion.setSala(sala);
+
+        List<Ticket> listaTickets = ticketService.obtenerTicketsPorFuncion(funcion.getId());
+
+        funcion.setTickets(listaTickets);
+
+        funcion.getSala().imprimirMapaAsientos(funcion.getTickets());
+
 
         System.out.print("Ingrese el asiento: ");
-        String asiento = scanner.nextLine();
-        String id = String.valueOf(System.currentTimeMillis());
-//        ticketService.agregarTicket(id, titulo, funcion.getSala().getNombre(), funcion.getFechaHora(), asiento);
-        System.out.println("Compra realizada con éxito.");
+        int asiento = scanner.nextInt();
+
+        for (Ticket ticket : listaTickets) {
+            if (ticket.getAsiento() == asiento) {
+                System.out.println("Asiento ocupado.");
+                return;
+            }
+        }
+
+        ticketService.agregarTicket(funcion.getId(), asiento);
+
+        System.out.println("¡Compra exitosa!");
+
+
     }
 
     private void verHistorialCompras() {

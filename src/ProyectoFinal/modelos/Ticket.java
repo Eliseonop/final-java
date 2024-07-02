@@ -5,42 +5,42 @@ import java.time.LocalDateTime;
 
 public class Ticket {
     private String id;
-    private String tituloPelicula;
+//    private String peliculaId;
 
-    private LocalDateTime fechaHoraFuncion;
-    private String asiento;
-    private String salaId;
-    private Sala sala;
+    //    private LocalDateTime fechaHoraFuncion;
+    private int asiento;
+    private String funcionId;
+    private String igv;
+    private Funcion funcion;
 
     // Constructor
-    public Ticket(String id, String tituloPelicula, LocalDateTime fechaHoraFuncion, String asiento,
-                  String salaId) {
+    public Ticket(String id, String funcionId, int asiento
+    ) {
 
         this.id = id;
-        this.tituloPelicula = tituloPelicula;
-        this.fechaHoraFuncion = fechaHoraFuncion;
+        this.funcionId = funcionId;
         this.asiento = asiento;
-        this.salaId = salaId;
+
 
     }
 
     // Getters y Setters
-    public Sala getSala() {
-        return sala;
+    public Funcion getFuncion() {
+        return funcion;
     }
 
-    public void setSala(Sala sala) {
-        this.sala = sala;
+    public void setFuncion(Funcion funcion) {
+        this.funcion = funcion;
     }
 
-    public String getSalaId() {
-        return salaId;
+
+    public String getFuncionId() {
+        return funcionId;
     }
 
-    public void setSalaId(String salaId) {
-        this.salaId = salaId;
+    public void setFuncionId(String funcionId) {
+        this.funcionId = funcionId;
     }
-
 
     public String getId() {
         return id;
@@ -50,42 +50,28 @@ public class Ticket {
         this.id = id;
     }
 
-    public String getTituloPelicula() {
-        return tituloPelicula;
-    }
 
-    public void setTituloPelicula(String tituloPelicula) {
-        this.tituloPelicula = tituloPelicula;
-    }
-
-
-    public void setFechaHoraFuncion(LocalDateTime fechaHoraFuncion) {
-        this.fechaHoraFuncion = fechaHoraFuncion;
-    }
-
-    public String getAsiento() {
+    public int getAsiento() {
         return asiento;
     }
 
-    public void setAsiento(String asiento) {
+    public void setAsiento(int asiento) {
         this.asiento = asiento;
     }
 
     // Método para actualizar los atributos del ticket
-    public void actualizarTicket(String tituloPelicula, LocalDateTime fechaHoraFuncion, String asiento, String salaId) {
-        this.tituloPelicula = tituloPelicula;
-        this.fechaHoraFuncion = fechaHoraFuncion;
+    public void actualizarTicket(String peliculaId, int asiento) {
+        this.funcionId = peliculaId;
         this.asiento = asiento;
-        this.salaId = salaId;
     }
 
     @Override
     public String toString() {
         return "Ticket{" +
                 "id='" + id + '\'' +
-                ", tituloPelicula='" + tituloPelicula + '\'' +
-                ", nombreSala='" + sala.getNombre() + '\'' +
-                ", fechaHoraFuncion=" + fechaHoraFuncion +
+                ", tituloPelicula='" + funcion.getPelicula().getTitulo() + '\'' +
+                ", nombreSala='" + funcion.getSala().getNombre() + '\'' +
+                ", fechaHoraFuncion=" + funcion.getFechaHora() +
                 ", asiento='" + asiento + '\'' +
                 '}';
     }

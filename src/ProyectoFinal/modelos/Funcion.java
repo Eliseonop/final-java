@@ -11,6 +11,8 @@ public class Funcion {
     private String salaId;
     private LocalDateTime fechaHora;
     private List<Ticket> tickets;
+    private Sala sala;
+    private Pelicula pelicula;
 
     // Constructor
     public Funcion(
@@ -24,6 +26,22 @@ public class Funcion {
     }
 
     // Getters y Setters
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
+
+    public Pelicula getPelicula() {
+        return pelicula;
+    }
+
+    public void setPelicula(Pelicula pelicula) {
+        this.pelicula = pelicula;
+    }
+
     public String getId() {
         return id;
     }
@@ -71,6 +89,11 @@ public class Funcion {
         this.salaId = salaId;
         this.fechaHora = fechaHora;
     }
+
+
+
+
+
 
     @Override
     public String toString() {

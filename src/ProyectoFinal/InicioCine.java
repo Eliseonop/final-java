@@ -72,7 +72,8 @@ public class InicioCine {
                             PrincipalCliente principalCliente = new PrincipalCliente(
                                     peliculaService,
                                     ticketService,
-                                    funcionService
+                                    funcionService,
+                                    salaService
                             );
                             principalCliente.iniciar();
 //                            System.out.println("Login exitoso! Usuario: " + usuario.getUsername() + " Rol: " + usuario.getRole());

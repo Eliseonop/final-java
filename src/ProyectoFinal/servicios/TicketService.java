@@ -29,30 +29,34 @@ public class TicketService {
     private Ticket fromString(String line) {
         String[] parts = line.split(",");
         String id = parts[0];
-        String tituloPelicula = parts[1];
-        String nombreSala = parts[2];
-        LocalDateTime fechaHoraFuncion = LocalDateTime.parse(parts[3]);
+        String funcionId = parts[1];
         String asiento = parts[4];
-        String salaId = parts[5];
-        return new Ticket(id, tituloPelicula, fechaHoraFuncion, asiento, salaId);
+//        String salaId = parts[5];
+        return new Ticket(id, funcionId, Integer.parseInt(asiento));
     }
 
     // Método para convertir de Ticket a cadena
     private String toString(Ticket ticket) {
         return String.join(",",
                 ticket.getId(),
-                ticket.getTituloPelicula(),
-                ticket.getAsiento(),
-                ticket.getSalaId()
+                ticket.getFuncionId(),
+                String.valueOf(ticket.getAsiento())
         );
     }
 
     // Métodos de TicketService
-    public void agregarTicket(String id, String tituloPelicula, LocalDateTime fechaHoraFuncion, String asiento, String salaId
+    public void agregarTicket(String funcionId, int asiento
     ) {
-        Ticket nuevoTicket = new Ticket(id, tituloPelicula, fechaHoraFuncion, asiento, salaId);
+
+        String id = generarId();
+
+        Ticket nuevoTicket = new Ticket(id, funcionId, asiento);
         tickets.add(nuevoTicket);
         guardarTickets();
+    }
+
+    public String generarId() {
+        return String.valueOf(tickets.size() + 1 + "T");
     }
 
     public List<Ticket> listarTickets() {
@@ -62,6 +66,11 @@ public class TicketService {
     public Ticket obtenerTicketPorId(String id) {
         return tickets.stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
     }
+
+    public List<Ticket> obtenerTicketsPorFuncion(String funcionId) {
+        return tickets.stream().filter(t -> t.getFuncionId().equals(funcionId)).toList();
+    }
+
 
     private void guardarTickets() {
         try {
